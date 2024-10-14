@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Histórias e Comentários</title>
+    <style>body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+        font-size: 2.5em;
+        color: #4a4a4a;
+        text-align: center;
+    }
+    
+    h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+        color: #5a5a5a;
+    }
+    
+    h3 {
+        font-size: 1.5em;
+        margin-top: 20px;
+        color: #666;
+    }
+    
+    p {
+        line-height: 1.6;
+        margin: 15px 0;
+    }
+    
+    .comment-section {
+        margin-top: 30px;
+        padding: 15px;
+        border-top: 1px solid #eaeaea;
+    }
+    
+    .comment {
+        background: #f9f9f9;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    input[type="submit"] {
+        background: #5cb85c;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    input[type="submit"]:hover {
+        background: #4cae4c;
+    }
+    
+    footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9em;
+        color: #aaa;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>A Aventura de um Sonhador</h1>
+        <h2>Autor: Machado de Assis = complete a história</h2>
+        <p>
+            "Era uma vez um sonhador que, ao acordar numa manhã ensolarada, decidiu que o dia lhe traria grandes aventuras. 
+            Com seu chapéu na cabeça e um brilho nos olhos, saiu à procura de novas experiências. 
+            Mas, como sabemos, nem sempre a vida se desenrola como esperamos. O caminho estava repleto de surpresas, e cada esquina parecia sussurrar segredos antigos.
+        </p>
+        <p>
+            "Enquanto caminhava, encontrou pessoas de diferentes histórias e destinos. Um artista pintando quadros, uma senhora contando histórias para crianças, e um jovem que sonhava em ser escritor. 
+            Eles compartilharam suas visões do mundo, e o sonhador, envolto em suas narrativas, começou a entender que cada vida é uma história esperando para ser contada."
+        </p>
+        <h3>Comentários</h3>
+        <div class="comment-section">
+            <div id="comments"></div>
+            <input type="text" id="name" placeholder="Seu Nome" required>
+            <textarea id="comment" rows="4" placeholder="Digite seu comentário..." required></textarea>
+            <input type="submit" id="submit" value="Adicionar Comentário">
+        </div>
+    </div>
+    <footer>
+        &copy; 2024 Histórias e Comentários. Todos os direitos reservados.
+    </footer>
+    
+    <script>
+        const submitButton = document.getElementById('submit');
+        const commentsDiv = document.getElementById('comments');
+
+        submitButton.addEventListener('click', async () => {
+            const name = document.getElementById('name').value;
+            const comment = document.getElementById('comment').value;
+
+            const response = await fetch('http://localhost:3001/comentarios', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    historia_id: 1,
+                    nome: name,
+                    comentario: comment
+                }),
+            });
+
+            const result = await response.json();
+            if (result.id) {
+                const newComment = document.createElement('div');
+                newComment.className = 'comment';
+                newComment.innerHTML = `<strong>${name}</strong>: ${comment}`;
+                commentsDiv.prepend(newComment);
+
+                // Limpar os campos
+                document.getElementById('name').value = '';
+                document.getElementById('comment').value = '';
+            }
+        });
+
+        // Função para carregar comentários ao inicializar
+        async function loadComments() {
+            const response = await fetch('http://localhost:3001/comentarios/1');
+            const comments = await response.json();
+            comments.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+                commentDiv.innerHTML = `<strong>${comment.nome}</strong>: ${comment.comentario}`;
+                commentsDiv.appendChild(commentDiv);
+            });
+        }
+
+        loadComments();
+    </script>
+</body>
+</html>
