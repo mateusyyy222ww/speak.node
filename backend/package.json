@@ -1,21 +1,16 @@
 {
   "name": "historia-comentarios",
   "version": "1.0.0",
-  "main": "index.js",
- "scripts": {
+  "main": "server.js",
+  "scripts": {
     "start": "node server.js"
-}
-
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.2",
+    "ws": "^8.0.0"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "express": "^4.21.1",
-    "sqlite3": "^5.1.7",
-    "ws": "^8.18.0"
-  }
+  "author": "Mateus",
+  "license": "MIT"
 }
